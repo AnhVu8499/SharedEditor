@@ -4,6 +4,7 @@ const EditorComponent = ({ username }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [content, setContent] = useState('');
   const [currentTyping, setCurrentTyping] = useState('');
+  const [filename, setFilename] = useState('file');
   const websocketRef = useRef(null);  // WebSocket reference to persist across renders
 
   useEffect(() => {
@@ -55,23 +56,45 @@ const EditorComponent = ({ username }) => {
     }
   };
 
+  const handleFnameChange = (e) => {
+    e.preventDefault();
+    setFilename(e.target.value);
+  }
+
+  // When Save to File is clicked, downloads the contents of the editor into a new .txt file named after what the filename state is
+  const handleExport = () => {
+    const blob = new Blob([content], {type: 'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const newName = filename + '.txt';
+    link.setAttribute('download', newName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div>
-      <textarea
-        id="editor"
-        value={content}
-        onChange={handleInputChange}
-        placeholder="Start typing..."
-        rows="10"
-        cols="50"
-      />
-      {isTyping ? (
+      <div style={{display: 'flex', flexDirection: 'column', alignContent: 'center', justifyContent: 'center', width: '400px'}}>
+        <input type="text" value={filename} onChange={handleFnameChange}/>
+        <textarea
+          id="editor"
+          value={content}
+          onChange={handleInputChange}
+          placeholder="Start typing..."
+          rows="10"
+          cols="50"
+        />
+        {isTyping ? (
           <p> {currentTyping} is typing ... </p>
-      ) : (
+        ) : (
           <>
-            <p>Waiting for input ...</p>
-          </>
-      )}
+              <p>Waiting for input ...</p>
+            </>
+        )}
+      </div>
+      <button onClick={handleExport}>Save To File</button>
 
       
     </div>
