@@ -26,7 +26,6 @@ const EditorComponent = ({ username }) => {
 
     websocketRef.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log(data);
       setContent(data.content); 
       setCurrentTyping(data.username);
       setIsTyping(true);
