@@ -62,11 +62,10 @@ class EditorConsumer(AsyncWebsocketConsumer):
         redis = await aioredis.from_url(REDIS_URL)
         content = await redis.get('shared_content')
         await redis.close()  # Close the Redis connection
+        # Decode the bytes to a string, if content is not None
         send_content = content.decode('utf-8') if content is not None else ''
         return send_content
 
-        # Decode the bytes to a string, if content is not None
-        return (send_content, send_username)
 
     async def save_shared_content(self, content):
         # Use aioredis to create a Redis client
