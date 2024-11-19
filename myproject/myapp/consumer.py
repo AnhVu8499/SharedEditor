@@ -19,7 +19,7 @@ class EditorConsumer(AsyncWebsocketConsumer):
         shared_content = await self.get_shared_content()  # Get stored contents from Redis
         # Send the current content to the newly connected client
         await self.send(text_data=json.dumps({
-            'content': shared_content
+            'content': shared_content,
         }))
 
     async def disconnect(self, close_code):
@@ -50,9 +50,11 @@ class EditorConsumer(AsyncWebsocketConsumer):
     async def editor_message(self, event):
         # Send the updated content to all clients in the group
         content = event['content']
+        username = event['username']
 
         await self.send(text_data=json.dumps({
-            'content': content
+            'content': content,
+            'username': username
         }))
 
     async def get_shared_content(self):
@@ -60,9 +62,11 @@ class EditorConsumer(AsyncWebsocketConsumer):
         redis = await aioredis.from_url(REDIS_URL)
         content = await redis.get('shared_content')
         await redis.close()  # Close the Redis connection
+        send_content = content.decode('utf-8') if content is not None else ''
+        return send_content
 
         # Decode the bytes to a string, if content is not None
-        return content.decode('utf-8') if content is not None else ''
+        return (send_content, send_username)
 
     async def save_shared_content(self, content):
         # Use aioredis to create a Redis client
