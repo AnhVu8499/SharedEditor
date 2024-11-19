@@ -1,5 +1,5 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
-import aioredis
+import redis.asyncio as aioredis
 import json
 
 REDIS_URL = 'redis://127.0.0.1:6379/0'
