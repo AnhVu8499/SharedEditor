@@ -28,6 +28,7 @@ const EditorComponent = ({ username }) => {
       const data = JSON.parse(event.data);
       setContent(data.content); 
       setCurrentTyping(data.username);
+      setIsTyping(true);
     };
 
     websocketRef.current.onclose = () => {
@@ -48,11 +49,14 @@ const EditorComponent = ({ username }) => {
 
     // Send updated content to the server via WebSocket
     if (websocketRef.current && websocketRef.current.readyState === WebSocket.OPEN) {
-      websocketRef.current.send(JSON.stringify({ 
+      const data = JSON.stringify({
         action: 'edit',
         username: username,
-        content: newContent ,
-      }));
+        content: newContent
+      });
+
+      console.log(data);
+      websocketRef.current.send(data);
     }
   };
 
