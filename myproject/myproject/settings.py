@@ -9,14 +9,16 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-import environ
+import environ, os
 from pathlib import Path
 
-env = environ.Env()
-environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
 
+# Read the .env file
+env_file = BASE_DIR / ".env"
+environ.Env.read_env(env_file=env_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -29,9 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -103,20 +103,12 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'project',
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': env('DATABASE_URL'),
-            'retryWrites': True,
-            'w': 'majority',
-        }
+        'NAME': BASE_DIR / 'db.sqlite3',  # Ensure BASE_DIR is defined
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
