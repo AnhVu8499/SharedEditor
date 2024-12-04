@@ -5,6 +5,7 @@ const EditorComponent = ({ username }) => {
   const [content, setContent] = useState('');
   const [currentTyping, setCurrentTyping] = useState('');
   const [filename, setFilename] = useState('file');
+  const [save, setSave] = useState('');
   const websocketRef = useRef(null);  // WebSocket reference to persist across renders
 
   useEffect(() => {
@@ -65,6 +66,27 @@ const EditorComponent = ({ username }) => {
     setFilename(e.target.value);
   }
 
+
+  const handleSaveDb = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/save-to-db', {
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, content }),
+      });
+      if (response.ok) {
+        alert("Content saved:", content);
+      } else {
+        alert("Failed to save");
+      }
+    } catch (error) {
+        console.error("Error saving:", error);
+        alert("Error while saving");
+    }
+  }
+
   // When Save to File is clicked, downloads the contents of the editor into a new .txt file named after what the filename state is
   const handleExport = () => {
     const blob = new Blob([content], {type: 'text/plain'});
@@ -98,6 +120,7 @@ const EditorComponent = ({ username }) => {
             </>
         )}
       </div>
+      <button onClick={handleSaveDb}>Save to DB</button>
       <button onClick={handleExport}>Save To File</button>
 
       

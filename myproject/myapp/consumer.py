@@ -1,10 +1,27 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
+from pathlib import Path
+from django.views.decorators.csrf import csrf_exempt
 import redis.asyncio as aioredis
-import json
+import json, environ, pymongo
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
+env_file = BASE_DIR / ".env"
+environ.Env.read_env(env_file=env_file)
 
 REDIS_URL = 'redis://127.0.0.1:6379/0'
 
 class EditorConsumer(AsyncWebsocketConsumer):
+    # Connect to MongoDB            
+    DATABASE_URL = env('DATABASE_URL')
+    db_name = env('db_name')
+    db_collection = env('db_collection')
+
+    client = pymongo.MongoClient(DATABASE_URL)
+    db = client[db_name]
+    collection = db[db_collection] 
+
     async def connect(self):
         self.room_group_name = 'editor_group'
 
@@ -46,6 +63,9 @@ class EditorConsumer(AsyncWebsocketConsumer):
                     'content': content
                 }
             )
+        elif action == 'save':
+            await self.save_db(username, content)
+
 
     async def editor_message(self, event):
         # Send the updated content to all clients in the group
@@ -72,3 +92,26 @@ class EditorConsumer(AsyncWebsocketConsumer):
         redis = await aioredis.from_url(REDIS_URL)
         await redis.set('shared_content', content)
         await redis.close()  # Close the Redis connection
+
+    async def save_db(self, username):
+        shared_content = await self.get_shared_content() 
+
+        try:
+            user = self.collection.find_one({ 'username': username })
+            if not user:
+                print("No mathcing user found")
+                return
+
+            update = {"$set": { "save_content": shared_content}}
+            save_content = self.collection.update_one({ 'username': username }, update)
+
+            print("save content is :", save_content)
+
+            # Testing with shell
+            if save_content.matched_count > 0:
+                return {"success": True, "message": "Content saved successfully"}
+            else:
+                 return {"success": False, "message": "No matching document found"}
+
+        except Exception as e:
+            return {"success": False, "message": f"Error: {str(e)}"}
