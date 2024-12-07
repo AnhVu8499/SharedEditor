@@ -81,7 +81,7 @@ class EditorConsumer(AsyncWebsocketConsumer):
         # Use aioredis to create a Redis client
         redis = await aioredis.from_url(REDIS_URL)
         content = await redis.get('shared_content')
-        await redis.close()  # Close the Redis connection
+        await redis.close() 
         # Decode the bytes to a string, if content is not None
         send_content = content.decode('utf-8') if content is not None else ''
         return send_content
@@ -91,7 +91,8 @@ class EditorConsumer(AsyncWebsocketConsumer):
         # Use aioredis to create a Redis client
         redis = await aioredis.from_url(REDIS_URL)
         await redis.set('shared_content', content)
-        await redis.close()  # Close the Redis connection
+        await redis.close()  
+
 
     async def save_db(self, username):
         shared_content = await self.get_shared_content() 
@@ -102,16 +103,30 @@ class EditorConsumer(AsyncWebsocketConsumer):
                 print("No mathcing user found")
                 return
 
-            update = {"$set": { "save_content": shared_content}}
-            save_content = self.collection.update_one({ 'username': username }, update)
-
-            print("save content is :", save_content)
+            update = {"$set": { "content": shared_content}}
+            result = self.collection.update_one({ 'username': username }, update)
 
             # Testing with shell
-            if save_content.matched_count > 0:
-                return {"success": True, "message": "Content saved successfully"}
-            else:
-                 return {"success": False, "message": "No matching document found"}
+            # if result.matched_count > 0:
+            #     return {"success": True, "message": "Content saved successfully"}
+            # else:
+            #     return {"success": False, "message": "No matching document found"}
 
-        except Exception as e:
-            return {"success": False, "message": f"Error: {str(e)}"}
+        except Exception:
+            return {"message": "Error while posting"}
+
+    async def load_db(self, username):
+        try:
+            user = self.collection.find_one({ 'username': username })
+            if not user:
+                return {"success": False, "message": "No matching user found in DB"}
+
+            content = user.get('content')
+            print("Loaded content:", content)
+            if not content:
+                return {"success": False, "message": "No content available to store in Redis"}
+            
+            await self.save_shared_content(content)
+            return {"success": True, "message": "Content successfully stored in Redis", "content": content}
+        except Exception:
+            return {"message": "Error while loading"}

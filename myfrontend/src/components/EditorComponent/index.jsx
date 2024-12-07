@@ -5,7 +5,7 @@ const EditorComponent = ({ username }) => {
   const [content, setContent] = useState('');
   const [currentTyping, setCurrentTyping] = useState('');
   const [filename, setFilename] = useState('file');
-  const [save, setSave] = useState('');
+  const [fetchContent, setFetchContent] = useState("");
   const websocketRef = useRef(null);  // WebSocket reference to persist across renders
 
   useEffect(() => {
@@ -42,6 +42,10 @@ const EditorComponent = ({ username }) => {
     };
   }, [username]);  // Re-run this effect if the 'username' changes
 
+  useEffect(() => {
+    setContent(fetchContent);
+  }, [fetchContent]); 
+
   const handleInputChange = (e) => {
     const newContent = e.target.value;
     setContent(newContent);
@@ -66,7 +70,6 @@ const EditorComponent = ({ username }) => {
     setFilename(e.target.value);
   }
 
-
   const handleSaveDb = async () => {
     try {
       const response = await fetch('http://127.0.0.1:8000/save-to-db', {
@@ -84,6 +87,32 @@ const EditorComponent = ({ username }) => {
     } catch (error) {
         console.error("Error saving:", error);
         alert("Error while saving");
+    }
+  }
+
+  const handleGetDb = async () => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/load-from-db?username=${username}`, {
+        method:'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json(); 
+        if (data.success) {
+          setContent(data.content); 
+        } else {
+          alert(data.message);
+        }
+        window.location.reload();
+      } else {
+        alert("Nothing found!");
+      }
+    } catch (error) {
+      console.error("Error Getting Data:", error);
+      alert("Error while getting data from db");
     }
   }
 
@@ -122,8 +151,9 @@ const EditorComponent = ({ username }) => {
       </div>
       <button onClick={handleSaveDb}>Save to DB</button>
       <button onClick={handleExport}>Save To File</button>
+      <button onClick={handleGetDb}>Retrieve From DB</button>
 
-      
+
     </div>
   );
 };
