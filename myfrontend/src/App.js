@@ -14,7 +14,7 @@ const App = () => {
           setIsLoggedIn(true);
           setUsername(storedUsername);
         }
-      }, []);
+    }, []);
 
     const handleLogin = (loginStatus, username) => {
         setIsLoggedIn(loginStatus); 
@@ -22,8 +22,8 @@ const App = () => {
     };
 
     const handleLogout = () => {
+        setUsername('');
         setIsLoggedIn(false);
-        setUsername("");
     };
 
     const handleSignUp = ( username, password ) =>{
@@ -40,7 +40,7 @@ const App = () => {
                 <>
                     <h1>Welcome, {username}!</h1>
                     <EditorComponent username={username} /> 
-                    <button onLogin={handleLogout}>Log out</button>
+                    <button onClick={handleLogout}>Log out</button>
                 </>
             )}
         </div>
