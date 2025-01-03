@@ -61,6 +61,7 @@ ROOT_URLCONF = 'myproject.urls'
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'https://sharededitor.onrender.com/',
 ]
 CSRF_COOKIE_SECURE = True
 #CORS_ALLOW_ALL_ORIGINS = True  
@@ -72,21 +73,23 @@ CORS_ALLOWED_ORIGINS = [
 
 ASGI_APPLICATION = 'myproject.asgi.application'
 
+
+# REDIS_URL = 'redis://127.0.0.1:6379'
+REDIS_URL = "redis://red-ctrq9pbtq21c7390g8f0:6379"
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [REDIS_URL],
         },
     },
 }
 
-REDIS_URL = 'redis://127.0.0.1:6379'
-
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.getenv("REDIS_URL", "redis://127.0.0.1:6379/1"),
+        "LOCATION": REDIS_URL,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
