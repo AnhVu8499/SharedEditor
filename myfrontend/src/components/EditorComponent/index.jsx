@@ -72,7 +72,8 @@ const EditorComponent = ({ username }) => {
 
   const handleSaveDb = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/save-to-db', {
+      const response = await fetch('https://sharededitor-server.onrender.com/save-to-db', {
+      //const response = await fetch('http://127.0.0.1:8000/save-to-db', {
         method:'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,7 +93,8 @@ const EditorComponent = ({ username }) => {
 
   const handleGetDb = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/load-from-db?username=${username}`, {
+      const response = await fetch(`https://sharededitor-server.onrender.com/load-from-db?username=${username}`, {
+      // const response = await fetch(`http://127.0.0.1:8000/load-from-db?username=${username}`, {
         method:'GET',
         headers: {
           'Content-Type': 'application/json',

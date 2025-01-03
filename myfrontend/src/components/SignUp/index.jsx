@@ -8,7 +8,8 @@ const SignUp = ({ onSignUp }) => {
         event.preventDefault();
 
         // POST request to backend signup endpoint
-        const response = await fetch('http://127.0.0.1:8000/signup/', {
+        const response = await fetch('https://sharededitor-server.onrender.com/signup/', {
+        // const response = await fetch('http://127.0.0.1:8000/signup/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

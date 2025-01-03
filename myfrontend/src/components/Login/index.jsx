@@ -35,7 +35,8 @@ const Login = ({ onLogin }) => {
     console.log('CSRF Token:', csrfToken);
 
     // Send login request to backend
-    const response = await fetch('http://127.0.0.1:8000/login/', {
+    const response = await fetch('https://sharededitor-server.onrender.com/login/', {
+    // const response = await fetch('http://127.0.0.1:8000/login/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
