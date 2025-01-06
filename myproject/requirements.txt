@@ -11,3 +11,4 @@ django-environ
 pymongo
 werkzeug
 dnspython
+python-decouple
