@@ -19,7 +19,8 @@ const EditorComponent = ({ username }) => {
 
   useEffect(() => {
     // Open WebSocket connection based on the provided username
-    websocketRef.current = new WebSocket(`ws://127.0.0.1:8000/ws/document/${username}`);
+    // websocketRef.current = new WebSocket(`ws://127.0.0.1:8000/ws/document/${username}`);
+    websocketRef.current = new WebSocket(`wss://sharededitor.onrender.com/ws/document/${username}`);
 
     websocketRef.current.onopen = () => {
       console.log(`WebSocket connection opened for document ${username}`);
