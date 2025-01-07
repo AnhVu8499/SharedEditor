@@ -11,7 +11,6 @@ env = environ.Env()
 env_file = BASE_DIR / ".env"
 environ.Env.read_env(env_file=env_file)
 
-@csrf_exempt  # Only for testing; remove in production
 def login_view(request):
     if request.method == 'POST':
         try:

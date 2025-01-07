@@ -3,7 +3,6 @@ from django.views.decorators.csrf import csrf_exempt
 import json, asyncio
 from .consumer import EditorConsumer
 
-@csrf_exempt
 def load_from_db_view(request):
     if request.method == 'GET':
         try:

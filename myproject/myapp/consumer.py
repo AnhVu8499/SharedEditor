@@ -106,12 +106,6 @@ class EditorConsumer(AsyncWebsocketConsumer):
             update = {"$set": { "content": shared_content}}
             result = self.collection.update_one({ 'username': username }, update)
 
-            # Testing with shell
-            # if result.matched_count > 0:
-            #     return {"success": True, "message": "Content saved successfully"}
-            # else:
-            #     return {"success": False, "message": "No matching document found"}
-
         except Exception:
             return {"message": "Error while posting"}
 
