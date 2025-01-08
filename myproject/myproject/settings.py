@@ -1,19 +1,18 @@
 import environ, os
 from pathlib import Path
 from decouple import config, Csv
-DEBUG = config('DEBUG', default=False, cast=bool)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 
 # Read the .env file
-env_file = BASE_DIR / ".env"
-environ.Env.read_env(env_file=env_file)
+# env_file = BASE_DIR / ".env"
+# environ.Env.read_env(env_file=env_file)
 
 # Debug settings
-DEBUG = config('DEBUG', default=False, cast=bool)
-SECRET_KEY = config('SECRET_KEY')
+DEBUG = os.getenv('DEBUG', default=False, cast=bool)
+SECRET_KEY = os.getenv('SECRET_KEY')
 # ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 ALLOWED_HOSTS = ['sharededitor-server.onrender.com', 'sharededitor-server-1mje.onrender.com','127.0.0.1', 'localhost']
 
@@ -44,12 +43,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'myproject.urls'
 
-CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
-CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='', cast=Csv())
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', default='', cast=Csv())
 
 ASGI_APPLICATION = 'myproject.asgi.application'
 
-REDIS_URL = config('REDIS_URL', default='redis://localhost:6379')
+REDIS_URL = os.getenv('REDIS_URL', default='redis://localhost:6379')
 
 CHANNEL_LAYERS = {
     "default": {
