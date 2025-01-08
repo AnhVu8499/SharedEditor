@@ -5,19 +5,19 @@ import redis.asyncio as aioredis
 import json, environ, pymongo
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-env = environ.Env()
-env_file = BASE_DIR / ".env"
-environ.Env.read_env(env_file=env_file)
+# BASE_DIR = Path(__file__).resolve().parent.parent
+# env = environ.Env()
+# env_file = BASE_DIR / ".env"
+# environ.Env.read_env(env_file=env_file)
 
-USE_EXTERNAL_REDIS = env.bool('USE_EXTERNAL_REDIS', default=False)
-REDIS_URL = env('EXTERNAL_REDIS') if USE_EXTERNAL_REDIS else env('REDIS_URL')
+USE_EXTERNAL_REDIS = os.getenv('USE_EXTERNAL_REDIS', 'False') == 'True'
+REDIS_URL = os.getenv('EXTERNAL_REDIS') if USE_EXTERNAL_REDIS else env('REDIS_URL')
 
 class EditorConsumer(AsyncWebsocketConsumer):
     # Connect to MongoDB            
-    DATABASE_URL = env('DATABASE_URL')
-    db_name = env('db_name')
-    db_collection = env('db_collection')
+    DATABASE_URL = os.getenv('DATABASE_URL')
+    db_name = os.getenv('db_name')
+    db_collection = os.getenv('db_collection')
 
     client = pymongo.MongoClient(DATABASE_URL)
     db = client[db_name]

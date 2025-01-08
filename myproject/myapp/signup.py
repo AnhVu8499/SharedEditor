@@ -6,18 +6,18 @@ from werkzeug.security import generate_password_hash
 import json, environ, pymongo
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-env = environ.Env()
-env_file = BASE_DIR / ".env"
-environ.Env.read_env(env_file=env_file)
+# BASE_DIR = Path(__file__).resolve().parent.parent
+# env = environ.Env()
+# env_file = BASE_DIR / ".env"
+# environ.Env.read_env(env_file=env_file)
 
 @csrf_exempt  # Only for testing; remove in production
 def signup_view(request):
     if request.method == 'POST':
         # Connect to MongoDB            
-        DATABASE_URL = env('DATABASE_URL')
-        db_name = env('db_name')
-        db_collection = env('db_collection')
+        DATABASE_URL = os.getenv('DATABASE_URL')
+        db_name = os.getenv('db_name')
+        db_collection = os.getenv('db_collection')
 
         client = pymongo.MongoClient(DATABASE_URL)
         db = client[db_name]
