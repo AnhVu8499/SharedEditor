@@ -11,7 +11,7 @@ import json, environ, pymongo, os
 # environ.Env.read_env(env_file=env_file)
 
 USE_EXTERNAL_REDIS = os.getenv('USE_EXTERNAL_REDIS', 'False') == 'True'
-REDIS_URL = os.getenv('EXTERNAL_REDIS') if USE_EXTERNAL_REDIS else env('REDIS_URL')
+REDIS_URL = os.getenv('EXTERNAL_REDIS') if USE_EXTERNAL_REDIS else os.getenv('REDIS_URL')
 
 class EditorConsumer(AsyncWebsocketConsumer):
     # Connect to MongoDB            
