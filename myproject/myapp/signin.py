@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from pathlib import Path
 from werkzeug.security import check_password_hash
-import environ, pymongo, json
+import environ, pymongo, json, os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent

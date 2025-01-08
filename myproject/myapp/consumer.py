@@ -2,7 +2,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from pathlib import Path
 from django.views.decorators.csrf import csrf_exempt
 import redis.asyncio as aioredis
-import json, environ, pymongo
+import json, environ, pymongo, os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent
