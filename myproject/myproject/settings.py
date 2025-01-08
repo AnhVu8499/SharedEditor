@@ -13,7 +13,7 @@ environ.Env.read_env(env_file=env_file)
 
 # Debug settings
 DEBUG = config('DEBUG', default=False, cast=bool)
-SECRET_KEY = config('SECRET_KEY', default='unsafe-secret-key')
+SECRET_KEY = config('SECRET_KEY')
 # ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 ALLOWED_HOSTS = ['sharededitor-server.onrender.com', 'sharededitor-server-1mje.onrender.com','127.0.0.1', 'localhost']
 

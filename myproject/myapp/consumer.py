@@ -10,7 +10,8 @@ env = environ.Env()
 env_file = BASE_DIR / ".env"
 environ.Env.read_env(env_file=env_file)
 
-REDIS_URL = 'redis://red-ctrq9pbtq21c7390g8f0:6379'
+USE_EXTERNAL_REDIS = env.bool('USE_EXTERNAL_REDIS', default=False)
+REDIS_URL = env('EXTERNAL_REDIS') if USE_EXTERNAL_REDIS else env('REDIS_URL')
 
 class EditorConsumer(AsyncWebsocketConsumer):
     # Connect to MongoDB            
