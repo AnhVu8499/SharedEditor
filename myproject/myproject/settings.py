@@ -11,7 +11,7 @@ env = environ.Env()
 # environ.Env.read_env(env_file=env_file)
 
 # Debug settings
-DEBUG = os.getenv('DEBUG', default=False, cast=bool)
+DEBUG = os.getenv('DEBUG', 'False').lower() in ['true', '1', 't']
 SECRET_KEY = os.getenv('SECRET_KEY')
 # ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 ALLOWED_HOSTS = ['sharededitor-server.onrender.com', 'sharededitor-server-1mje.onrender.com','127.0.0.1', 'localhost']
@@ -43,8 +43,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'myproject.urls'
 
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', default='', cast=Csv())
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
 
 ASGI_APPLICATION = 'myproject.asgi.application'
 
